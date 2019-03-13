@@ -5,14 +5,14 @@
 package muoncalib
 
 import (
-	"bytes"
 	"fmt"
+	"strings"
 
 	"go-hep.org/x/hep/groot/rcont"
 )
 
 func (exmap AliMpExMap) String() string {
-	o := new(bytes.Buffer)
+	o := new(strings.Builder)
 	fmt.Fprintf(o, "ExMap{Objs: [")
 	for i := 0; i < exmap.objs.Len(); i++ {
 		if i > 0 {
