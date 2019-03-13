@@ -58,7 +58,7 @@ func process(client *http.Client, path string, dest string, dry bool) {
 	key := "AliCDBEntry"
 	o, err := f.Get(key)
 	if err != nil {
-		fmt.Printf("Could not get key %s from file %s\n", key, path)
+		log.Fatalf("Could not get key %s from file %s\n", key, path)
 	}
 	v := o.(*ocdb.Entry)
 	// using run range as timestamp range for the moment
@@ -93,12 +93,12 @@ func process(client *http.Client, path string, dest string, dry bool) {
 	}
 	mpw.Close()
 
-	req, err := http.NewRequest("POST", url, &requestBody)
-	req.Header.Set("Content-Type", mpw.FormDataContentType())
-
+	req, err := http.NewRequest(http.MethodPost, url, &requestBody)
 	if err != nil {
 		log.Fatalf("Could not create request %s", err.Error())
 	}
+
+	req.Header.Set("Content-Type", mpw.FormDataContentType())
 	dumpRequest(req)
 	resp, err := client.Do(req)
 	if err != nil {
@@ -120,15 +120,18 @@ func main() {
 	imax := 0
 	client := &http.Client{Timeout: 2 * time.Second}
 
-	_ = filepath.Walk(srcdir, func(path string, info os.FileInfo, err error) error {
+	err := filepath.Walk(srcdir, func(path string, info os.FileInfo, err error) error {
 		if strings.HasPrefix(filepath.Base(path), "Run") &&
 			filepath.Ext(path) == ".root" {
 			imax--
 			if imax == 0 {
-				return fmt.Errorf("toto")
+				return io.EOF
 			}
 			process(client, path, dest, dry)
 		}
 		return nil
 	})
+	if err != nil && err != io.EOF {
+		log.Fatal(err)
+	}
 }
