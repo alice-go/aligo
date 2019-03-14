@@ -29,6 +29,7 @@ var (
 	srcdir string
 	dest   string
 	dry    bool
+	limit  int
 )
 
 func dumpRequest(r *http.Request) {
@@ -112,22 +113,23 @@ func init() {
 	flag.StringVar(&srcdir, "srcdir", "/Users/laurent/cernbox/ocdbs/2018/OCDB/MUON/Calib/OccupancyMap", "local source directory containing OCDB objects")
 	flag.StringVar(&dest, "dest", "OccupancyMap/MUON", "where to upload objects found in srcdir to")
 	flag.StringVar(&ccdb, "ccdb", "http://localhost:6464", "URL of CCDB endpoint")
-	flag.BoolVar(&dry, "dry", true, "only list what would happen without doing it")
+	flag.IntVar(&limit, "limit", 0, "limit the number of files that will be transfered (0 means no limit)")
+	flag.BoolVar(&dry, "dry", false, "only list what would happen without doing it")
 }
 
 func main() {
 	flag.Parse()
-	imax := 0
+	processed := 0
 	client := &http.Client{Timeout: 2 * time.Second}
 
 	err := filepath.Walk(srcdir, func(path string, info os.FileInfo, err error) error {
 		if strings.HasPrefix(filepath.Base(path), "Run") &&
 			filepath.Ext(path) == ".root" {
-			imax--
-			if imax == 0 {
+			if limit != 0 && processed == limit {
 				return io.EOF
 			}
 			process(client, path, dest, dry)
+			processed++
 		}
 		return nil
 	})
