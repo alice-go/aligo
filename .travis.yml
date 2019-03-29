@@ -22,6 +22,7 @@ matrix:
    - go: 1.12.x
      env:
        - TAGS="-tags travis"
+       - COVERAGE="-coverpkg=github.com/alice-go/aligo/..."
    - go: 1.11.x
      env:
        - TAGS="-tags travis"
@@ -44,7 +45,7 @@ notifications:
 script:
  - go get -d -t -v ./...
  - go install -v $TAGS ./...
- - go test -v $TAGS $COVERAGE ./...
+ - go run ./ci/run-tests.go $TAGS $COVERAGE
 
 after_success:
  - bash <(curl -s https://codecov.io/bash)
