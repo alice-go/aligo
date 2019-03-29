@@ -15,15 +15,16 @@ import (
 	"go-hep.org/x/hep/groot/rtypes"
 )
 
-type AliMUONVCalibParam struct {
+// VParam is an AliMUONVCalibParam.
+type VParam struct {
 	base rbase.Object `groot:"BASE-TObject"` // base class
 }
 
-func (*AliMUONVCalibParam) Class() string   { return "AliMUONVCalibParam" }
-func (*AliMUONVCalibParam) RVersion() int16 { return 1 }
+func (*VParam) Class() string   { return "AliMUONVCalibParam" }
+func (*VParam) RVersion() int16 { return 1 }
 
 // MarshalROOT implements rbytes.Marshaler
-func (o *AliMUONVCalibParam) MarshalROOT(w *rbytes.WBuffer) (int, error) {
+func (o *VParam) MarshalROOT(w *rbytes.WBuffer) (int, error) {
 	if w.Err() != nil {
 		return 0, w.Err()
 	}
@@ -37,7 +38,7 @@ func (o *AliMUONVCalibParam) MarshalROOT(w *rbytes.WBuffer) (int, error) {
 
 // ROOTUnmarshaler is the interface implemented by an object that can
 // unmarshal itself from a ROOT buffer
-func (o *AliMUONVCalibParam) UnmarshalROOT(r *rbytes.RBuffer) error {
+func (o *VParam) UnmarshalROOT(r *rbytes.RBuffer) error {
 	if r.Err() != nil {
 		return r.Err()
 	}
@@ -56,7 +57,7 @@ func (o *AliMUONVCalibParam) UnmarshalROOT(r *rbytes.RBuffer) error {
 func init() {
 	{
 		f := func() reflect.Value {
-			var o AliMUONVCalibParam
+			var o VParam
 			return reflect.ValueOf(&o)
 		}
 		rtypes.Factory.Add("AliMUONVCalibParam", f)
@@ -83,7 +84,7 @@ func init() {
 }
 
 var (
-	_ root.Object        = (*AliMUONVCalibParam)(nil)
-	_ rbytes.Marshaler   = (*AliMUONVCalibParam)(nil)
-	_ rbytes.Unmarshaler = (*AliMUONVCalibParam)(nil)
+	_ root.Object        = (*VParam)(nil)
+	_ rbytes.Marshaler   = (*VParam)(nil)
+	_ rbytes.Unmarshaler = (*VParam)(nil)
 )

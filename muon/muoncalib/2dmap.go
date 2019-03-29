@@ -17,18 +17,18 @@ import (
 	"go-hep.org/x/hep/groot/rtypes"
 )
 
-type AliMUON2DMap struct {
-	base  AliMUONVStore `groot:"BASE-AliMUONVStore"` // base class
-	exmap *AliMpExMap   `groot:"fMap"`               // /< Our internal map (an AliMpExMap of AliMpExMaps)
-	opt   bool          `groot:"fOptimizeForDEManu"` // /< whether (i,j) pair is supposed to be (DetElemId,ManuId) (allow us to allocate right amount of memory, that's all it does.
+type Map2D struct {
+	base  VStore   `groot:"BASE-AliMUONVStore"` // base class
+	exmap *MpExMap `groot:"fMap"`               // /< Our internal map (an AliMpExMap of AliMpExMaps)
+	opt   bool     `groot:"fOptimizeForDEManu"` // /< whether (i,j) pair is supposed to be (DetElemId,ManuId) (allow us to allocate right amount of memory, that's all it does.
 
 }
 
-func (*AliMUON2DMap) Class() string   { return "AliMUON2DMap" }
-func (*AliMUON2DMap) RVersion() int16 { return 1 }
+func (*Map2D) Class() string   { return "AliMUON2DMap" }
+func (*Map2D) RVersion() int16 { return 1 }
 
 // MarshalROOT implements rbytes.Marshaler
-func (o *AliMUON2DMap) MarshalROOT(w *rbytes.WBuffer) (int, error) {
+func (o *Map2D) MarshalROOT(w *rbytes.WBuffer) (int, error) {
 	if w.Err() != nil {
 		return 0, w.Err()
 	}
@@ -44,7 +44,7 @@ func (o *AliMUON2DMap) MarshalROOT(w *rbytes.WBuffer) (int, error) {
 
 // ROOTUnmarshaler is the interface implemented by an object that can
 // unmarshal itself from a ROOT buffer
-func (o *AliMUON2DMap) UnmarshalROOT(r *rbytes.RBuffer) error {
+func (o *Map2D) UnmarshalROOT(r *rbytes.RBuffer) error {
 	if r.Err() != nil {
 		return r.Err()
 	}
@@ -58,7 +58,7 @@ func (o *AliMUON2DMap) UnmarshalROOT(r *rbytes.RBuffer) error {
 
 	o.exmap = nil
 	if obj := r.ReadObjectAny(); obj != nil {
-		o.exmap = obj.(*AliMpExMap)
+		o.exmap = obj.(*MpExMap)
 	}
 	o.opt = r.ReadBool()
 
@@ -81,9 +81,9 @@ func sortedManus(manus []Manu) []Manu {
 	return manus
 }
 
-func (m *AliMUON2DMap) ExMap() *AliMpExMap { return m.exmap }
+func (m *Map2D) ExMap() *MpExMap { return m.exmap }
 
-func (m *AliMUON2DMap) GetObject(deid, manuid int) root.Object {
+func (m *Map2D) GetObject(deid, manuid int) root.Object {
 	objects := m.exmap.Objects()
 	keys := m.exmap.Keys()
 	for i := 0; i < objects.Len(); i++ {
@@ -91,7 +91,7 @@ func (m *AliMUON2DMap) GetObject(deid, manuid int) root.Object {
 		if int(de) != deid {
 			continue
 		}
-		om := objects.At(i).(*AliMpExMap)
+		om := objects.At(i).(*MpExMap)
 		k := om.Keys()
 		o := om.Objects()
 		for j := 0; j < o.Len(); j++ {
@@ -104,7 +104,7 @@ func (m *AliMUON2DMap) GetObject(deid, manuid int) root.Object {
 	return nil
 }
 
-func (m *AliMUON2DMap) GetManusForDE(deid int) []Manu {
+func (m *Map2D) GetManusForDE(deid int) []Manu {
 	var manus []Manu
 	objects := m.exmap.Objects()
 	keys := m.exmap.Keys()
@@ -113,7 +113,7 @@ func (m *AliMUON2DMap) GetManusForDE(deid int) []Manu {
 		if int(de) != deid {
 			continue
 		}
-		om := objects.At(i).(*AliMpExMap)
+		om := objects.At(i).(*MpExMap)
 		k := om.Keys()
 		o := om.Objects()
 		for j := 0; j < o.Len(); j++ {
@@ -123,7 +123,7 @@ func (m *AliMUON2DMap) GetManusForDE(deid int) []Manu {
 	return sortedManus(manus)
 }
 
-func (m *AliMUON2DMap) GetManus() []Manu {
+func (m *Map2D) GetManus() []Manu {
 	var manus []Manu
 	objects := m.exmap.Objects()
 	keys := m.exmap.Keys()
@@ -134,14 +134,14 @@ func (m *AliMUON2DMap) GetManus() []Manu {
 	return sortedManus(manus)
 }
 
-func (m *AliMUON2DMap) String() string {
+func (m *Map2D) String() string {
 	return fmt.Sprintf("MUON2DMap{Opt: %v, Map: %v}", m.opt, *m.exmap)
 }
 
 func init() {
 	{
 		f := func() reflect.Value {
-			var o AliMUON2DMap
+			var o Map2D
 			return reflect.ValueOf(&o)
 		}
 		rtypes.Factory.Add("AliMUON2DMap", f)
@@ -194,7 +194,7 @@ func init() {
 }
 
 var (
-	_ root.Object        = (*AliMUON2DMap)(nil)
-	_ rbytes.Marshaler   = (*AliMUON2DMap)(nil)
-	_ rbytes.Unmarshaler = (*AliMUON2DMap)(nil)
+	_ root.Object        = (*Map2D)(nil)
+	_ rbytes.Marshaler   = (*Map2D)(nil)
+	_ rbytes.Unmarshaler = (*Map2D)(nil)
 )

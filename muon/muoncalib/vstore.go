@@ -15,15 +15,16 @@ import (
 	"go-hep.org/x/hep/groot/rtypes"
 )
 
-type AliMUONVStore struct {
+// VStore is an AliMUONVStore.
+type VStore struct {
 	base rbase.Object `groot:"BASE-TObject"` // base class
 }
 
-func (*AliMUONVStore) Class() string   { return "AliMUONVStore" }
-func (*AliMUONVStore) RVersion() int16 { return 1 }
+func (*VStore) Class() string   { return "AliMUONVStore" }
+func (*VStore) RVersion() int16 { return 1 }
 
 // MarshalROOT implements rbytes.Marshaler
-func (o *AliMUONVStore) MarshalROOT(w *rbytes.WBuffer) (int, error) {
+func (o *VStore) MarshalROOT(w *rbytes.WBuffer) (int, error) {
 	if w.Err() != nil {
 		return 0, w.Err()
 	}
@@ -37,7 +38,7 @@ func (o *AliMUONVStore) MarshalROOT(w *rbytes.WBuffer) (int, error) {
 
 // ROOTUnmarshaler is the interface implemented by an object that can
 // unmarshal itself from a ROOT buffer
-func (o *AliMUONVStore) UnmarshalROOT(r *rbytes.RBuffer) error {
+func (o *VStore) UnmarshalROOT(r *rbytes.RBuffer) error {
 	if r.Err() != nil {
 		return r.Err()
 	}
@@ -56,7 +57,7 @@ func (o *AliMUONVStore) UnmarshalROOT(r *rbytes.RBuffer) error {
 func init() {
 	{
 		f := func() reflect.Value {
-			var o AliMUONVStore
+			var o VStore
 			return reflect.ValueOf(&o)
 		}
 		rtypes.Factory.Add("AliMUONVStore", f)
@@ -83,7 +84,7 @@ func init() {
 }
 
 var (
-	_ root.Object        = (*AliMUONVStore)(nil)
-	_ rbytes.Marshaler   = (*AliMUONVStore)(nil)
-	_ rbytes.Unmarshaler = (*AliMUONVStore)(nil)
+	_ root.Object        = (*VStore)(nil)
+	_ rbytes.Marshaler   = (*VStore)(nil)
+	_ rbytes.Unmarshaler = (*VStore)(nil)
 )
