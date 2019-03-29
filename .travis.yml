@@ -1,17 +1,38 @@
 language: go
+go_import_path: github.com/alice-go/aligo
+os:
+  - linux
 
-go:
-  - 1.12.x
-  - 1.11.x
-  - 1.10.x
-  - master
+env:
+ - TAGS="-tags travis"
+
+sudo: false
+
+cache:
+ directories:
+   - $HOME/.cache/go-build
+   - $HOME/gopath/pkg/mod
+
+git:
+ depth: 10
 
 matrix:
  fast_finish: true
- allow_failures:
+ include:
+   - go: 1.12.x
+     env:
+       - TAGS="-tags travis"
+   - go: 1.11.x
+     env:
+       - TAGS="-tags travis"
+   - go: 1.10.x
+     env:
+       - TAGS="-tags travis"
    - go: master
-
-sudo: false
+     env:
+       - TAGS="-tags travis"
+       - COVERAGE="-race"
+       - GO111MODULE="on"
 
 notifications:
   email:
@@ -19,3 +40,11 @@ notifications:
       - binet@cern.ch
     on_success: change
     on_failure: always
+
+script:
+ - go get -d -t -v ./...
+ - go install -v $TAGS ./...
+ - go test -v $TAGS $COVERAGE ./...
+
+after_success:
+ - bash <(curl -s https://codecov.io/bash)
