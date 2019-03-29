@@ -18,17 +18,17 @@ import (
 	"go-hep.org/x/hep/groot/rtypes"
 )
 
-type AliMpExMap struct {
+type MpExMap struct {
 	base rbase.Object   `groot:"BASE-TObject"` // base class
 	objs rcont.ObjArray `groot:"fObjects"`     // /<  Array of objects
 	keys rcont.ArrayL64 `groot:"fKeys"`        // /<  Array of keys
 }
 
-func (*AliMpExMap) Class() string   { return "AliMpExMap" }
-func (*AliMpExMap) RVersion() int16 { return 1 }
+func (*MpExMap) Class() string   { return "AliMpExMap" }
+func (*MpExMap) RVersion() int16 { return 1 }
 
 // MarshalROOT implements rbytes.Marshaler
-func (o *AliMpExMap) MarshalROOT(w *rbytes.WBuffer) (int, error) {
+func (o *MpExMap) MarshalROOT(w *rbytes.WBuffer) (int, error) {
 	if w.Err() != nil {
 		return 0, w.Err()
 	}
@@ -44,7 +44,7 @@ func (o *AliMpExMap) MarshalROOT(w *rbytes.WBuffer) (int, error) {
 
 // ROOTUnmarshaler is the interface implemented by an object that can
 // unmarshal itself from a ROOT buffer
-func (o *AliMpExMap) UnmarshalROOT(r *rbytes.RBuffer) error {
+func (o *MpExMap) UnmarshalROOT(r *rbytes.RBuffer) error {
 	if r.Err() != nil {
 		return r.Err()
 	}
@@ -68,7 +68,7 @@ func (o *AliMpExMap) UnmarshalROOT(r *rbytes.RBuffer) error {
 	return r.Err()
 }
 
-func (exmap AliMpExMap) String() string {
+func (exmap MpExMap) String() string {
 	o := new(strings.Builder)
 	fmt.Fprintf(o, "ExMap{Objs: [")
 	for i := 0; i < exmap.objs.Len(); i++ {
@@ -81,13 +81,13 @@ func (exmap AliMpExMap) String() string {
 	return o.String()
 }
 
-func (e *AliMpExMap) Objects() rcont.ObjArray { return e.objs }
-func (e *AliMpExMap) Keys() rcont.ArrayL64    { return e.keys }
+func (e *MpExMap) Objects() rcont.ObjArray { return e.objs }
+func (e *MpExMap) Keys() rcont.ArrayL64    { return e.keys }
 
 func init() {
 	{
 		f := func() reflect.Value {
-			var o AliMpExMap
+			var o MpExMap
 			return reflect.ValueOf(&o)
 		}
 		rtypes.Factory.Add("AliMpExMap", f)
@@ -140,7 +140,7 @@ func init() {
 }
 
 var (
-	_ root.Object        = (*AliMpExMap)(nil)
-	_ rbytes.Marshaler   = (*AliMpExMap)(nil)
-	_ rbytes.Unmarshaler = (*AliMpExMap)(nil)
+	_ root.Object        = (*MpExMap)(nil)
+	_ rbytes.Marshaler   = (*MpExMap)(nil)
+	_ rbytes.Unmarshaler = (*MpExMap)(nil)
 )

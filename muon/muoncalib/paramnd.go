@@ -19,19 +19,19 @@ import (
 	"go-hep.org/x/hep/groot/rtypes"
 )
 
-type AliMUONCalibParamND struct {
-	base AliMUONVCalibParam `groot:"BASE-AliMUONVCalibParam"` // base class
-	dim  int32              `groot:"fDimension"`              // /< dimension of this object
-	size int32              `groot:"fSize"`                   // /< The number of double tuples we hold
-	n    int32              `groot:"fN"`                      // /< The total number of floats we hold (fDimension*fSize)
-	vs   []float64          `groot:"fValues,meta=[fN]"`       // The values array
+type ParamND struct {
+	base VParam    `groot:"BASE-AliMUONVCalibParam"` // base class
+	dim  int32     `groot:"fDimension"`              // /< dimension of this object
+	size int32     `groot:"fSize"`                   // /< The number of double tuples we hold
+	n    int32     `groot:"fN"`                      // /< The total number of floats we hold (fDimension*fSize)
+	vs   []float64 `groot:"fValues,meta=[fN]"`       // The values array
 }
 
-func (*AliMUONCalibParamND) Class() string   { return "AliMUONCalibParamND" }
-func (*AliMUONCalibParamND) RVersion() int16 { return 1 }
+func (*ParamND) Class() string   { return "AliMUONCalibParamND" }
+func (*ParamND) RVersion() int16 { return 1 }
 
 // MarshalROOT implements rbytes.Marshaler
-func (o *AliMUONCalibParamND) MarshalROOT(w *rbytes.WBuffer) (int, error) {
+func (o *ParamND) MarshalROOT(w *rbytes.WBuffer) (int, error) {
 	if w.Err() != nil {
 		return 0, w.Err()
 	}
@@ -50,7 +50,7 @@ func (o *AliMUONCalibParamND) MarshalROOT(w *rbytes.WBuffer) (int, error) {
 
 // ROOTUnmarshaler is the interface implemented by an object that can
 // unmarshal itself from a ROOT buffer
-func (o *AliMUONCalibParamND) UnmarshalROOT(r *rbytes.RBuffer) error {
+func (o *ParamND) UnmarshalROOT(r *rbytes.RBuffer) error {
 	if r.Err() != nil {
 		return r.Err()
 	}
@@ -72,23 +72,23 @@ func (o *AliMUONCalibParamND) UnmarshalROOT(r *rbytes.RBuffer) error {
 	return r.Err()
 }
 
-func (c *AliMUONCalibParamND) index(i, j int) int {
+func (c *ParamND) index(i, j int) int {
 	return i + int(c.size)*j
 }
 
-func (c *AliMUONCalibParamND) ID0() uint32 {
+func (c *ParamND) ID0() uint32 {
 	return c.base.base.ID & 0xFFFF
 }
 
-func (c *AliMUONCalibParamND) ID1() uint32 {
+func (c *ParamND) ID1() uint32 {
 	return (c.base.base.ID & 0xFFFF0000) >> 16
 }
 
-func (c *AliMUONCalibParamND) Value(i, j int) float64 {
+func (c *ParamND) Value(i, j int) float64 {
 	return c.vs[c.index(i, j)]
 }
 
-func (c *AliMUONCalibParamND) MeanAndSigma(dim int) (float64, float64) {
+func (c *ParamND) MeanAndSigma(dim int) (float64, float64) {
 	mean := 0.0
 	v2 := 0.0
 	n := int(c.size)
@@ -105,7 +105,7 @@ func (c *AliMUONCalibParamND) MeanAndSigma(dim int) (float64, float64) {
 	return mean, sigma
 }
 
-func (c *AliMUONCalibParamND) Print(w io.Writer, opt string) {
+func (c *ParamND) Print(w io.Writer, opt string) {
 	fmt.Fprintf(w, "AliMUONCalibParamND Id=(%d,%d) Size=%d Dimension=%d\n",
 		c.ID0(), c.ID1(), c.size, c.dim)
 	opt = strings.ToUpper(opt)
@@ -129,7 +129,7 @@ func (c *AliMUONCalibParamND) Print(w io.Writer, opt string) {
 func init() {
 	{
 		f := func() reflect.Value {
-			var o AliMUONCalibParamND
+			var o ParamND
 			return reflect.ValueOf(&o)
 		}
 		rtypes.Factory.Add("AliMUONCalibParamND", f)
@@ -208,7 +208,7 @@ func init() {
 }
 
 var (
-	_ root.Object        = (*AliMUONCalibParamND)(nil)
-	_ rbytes.Marshaler   = (*AliMUONCalibParamND)(nil)
-	_ rbytes.Unmarshaler = (*AliMUONCalibParamND)(nil)
+	_ root.Object        = (*ParamND)(nil)
+	_ rbytes.Marshaler   = (*ParamND)(nil)
+	_ rbytes.Unmarshaler = (*ParamND)(nil)
 )
