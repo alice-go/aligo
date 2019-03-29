@@ -9,6 +9,7 @@ import (
 	"log"
 	"os"
 
+	_ "github.com/alice-go/aligo/muon/muoncalib"
 	"github.com/alice-go/aligo/ocdb"
 	"go-hep.org/x/hep/groot"
 	_ "go-hep.org/x/hep/groot/ztypes"
